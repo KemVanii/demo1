@@ -1,0 +1,135 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int MAX = 100;
+
+struct info
+{
+	int id, month, year;
+	string name;
+};
+
+struct myList
+{
+	info a[MAX];
+	int n;
+};
+
+info createInfo(int id, string name, int month, int year)
+{
+	info s;
+	s.id = id;
+	s.name = name;
+	s.month = month;
+	s.year = year;
+	return s;
+}
+
+void outputEmployee (info a)
+{
+	cout << "id = " << a.id << endl;
+	cout << "name = " << a.name << endl;
+	cout << "month = " << a.month << endl;
+	cout << "year = " << a.year << endl;
+}
+
+void output(myList l)
+{
+	for (int i = 0; i < l.n; i++)
+	{
+		outputEmployee(l.a[i]);
+	}
+}
+
+myList find(myList list)
+{
+	myList re;
+	re.n = 0;
+	for (int i = 0; i < list.n; i++)
+		if (list.a[i].month >= 1 && list.a[i].month <= 3)
+			re.a[re.n++] = list.a[i];
+
+	return re;
+}
+
+void swap(info &a, info &b)
+{
+	info c = a;
+	a = b;
+	b = c;
+}
+
+void selectionSort(myList &list)
+{
+	for (int i = 0; i < (list.n) - 1; i++)
+	{
+		int max_pos = i;
+		for (int j = i + 1; j < list.n; j++)
+			if (list.a[j].id > list.a[max_pos].id)
+				max_pos = j;
+		swap(list.a[i], list.a[max_pos]);
+	}
+}
+
+int binarySearch(myList list, int left, int right, int x)
+{
+	while (left <= right)
+	{
+		int mid = (left + right) / 2;
+		info s = list.a[mid];
+		if (s.id == x)
+			return mid;
+		else if (s.id < x)
+			right = mid - 1;
+		else
+			left = mid + 1;
+	}
+
+	return -1;
+}
+
+void interchangeSort(myList &list)
+{
+	for (int i = 0; i < list.n - 1; i++)
+		for (int j = i + 1; j < list.n; j++)
+		{
+			if (list.a[i].month == list.a[j].month)
+			{
+				if (list.a[i].name > list.a[j].name)
+					swap(list.a[i], list.a[j]);
+			}
+			else if (list.a[i].month > list.a[j].month)
+				swap(list.a[i], list.a[j]);
+		}
+}
+
+
+int main()
+{
+	myList list;
+	list.n = 5;
+	list.a[0] = createInfo(1, "a", 3, 2003);
+	list.a[1] = createInfo(3, "b", 3, 2003);
+	list.a[2] = createInfo(2, "c", 2, 2003);
+	list.a[3] = createInfo(6, "d", 2, 2003);
+	list.a[4] = createInfo(4, "e", 9, 2003);
+
+	output(find(list));
+	cout << "\n =============Sorted==============" << endl;
+	selectionSort(list);
+	output(list);
+	cout << "===============Search================" << endl;
+	int pos = binarySearch(list, 0, list.n - 1, 23);
+	if (pos >= 0)
+		outputEmployee(list.a[pos]);
+	else
+		cout << "Khong tim thay" << endl;
+	cout << "\n =============Sorted==============" << endl;
+	interchangeSort(list);
+	output(list);
+
+	system("pause");
+	return 0;
+}
